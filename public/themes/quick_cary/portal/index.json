@@ -1,0 +1,102 @@
+{
+  "name": "首页",
+  "action": "portal/Index/index",
+  "description": "首页模板文件",
+  "order": 5.0,
+  "more": {
+    "vars": {
+
+      "top_slide": {
+        "title": "请选择欢迎灯片",
+        "value": "",
+        "type": "text",
+        "placeholder": "请填写用户姓名",
+        "dataSource":{
+          "api": "admin/Slide/index",
+          "multi": false
+        },
+        "tip": "设置后您的姓名将会显示在首页",
+        "rule": {
+          "require": true
+        }
+      },
+      "name": {
+        "title": "姓名",
+        "value": "",
+        "type": "text",
+        "placeholder": "请填写用户姓名",
+        "dataSource":{
+          "api": "admin/Nav/index",
+          "multi": false
+        },
+        "tip": "设置后您的姓名将会显示在首页",
+        "rule": {
+          "require": true
+        }
+      }
+    },
+    "widgets": {
+      "widgetName1": {
+        "title": "所有组件演示",
+        "name": "all_widget",
+        "display": "1",
+        "vars": {
+          "text": {
+            "title": "测试 text",
+            "value": "1",
+            "type": "array",
+            "tip": "这是一个text",
+            "rule": {
+              "require": true
+            }
+          }
+        }
+      },
+      "widgetName2": {
+        "title": "所有组件演示",
+        "name": "all_widget",
+        "display": "1",
+        "vars": {
+          "text": {
+            "title": "测试 text",
+            "value": "1",
+            "type": "array",
+            "item": {
+              "title": {
+                "title": "标题",
+                "value": "",
+                "type": "text",
+                "tip": "这是一个测试",
+                "rule": {
+                  "require": true
+                }
+              },
+              "icon": {
+                "title": "图标",
+                "value": "",
+                "type": "text",
+                "tip": "这是一个测试",
+                "rule": {
+                  "require": true
+                }
+              },
+              "content": {
+                "title": "描述",
+                "value": "",
+                "type": "text",
+                "tip": "这是一个测试",
+                "rule": {
+                  "require": true
+                }
+              }
+            },
+            "tip": "这是一个text",
+            "rule": {
+              "require": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+    "name": "联系我们页",
+    "action": "portal/Page/index",
+    "description": "联系我们页模板文件",
+    "order": 10.0,
+    "more": {
+        "vars": {
+            "baidu_map_info_window_text": {
+                "title": "百度地图标注文字",
+                "name": "baidu_map_info_window_text",
+                "value": "Cary<br/><span class=''>地址：广东省深圳市龙华新区富士康</span>",
+                "type": "text",
+                "tip": "百度地图标注文字,支持简单html代码",
+                "rule": []
+            },
+            "company_location": {
+                "title": "公司坐标",
+                "value": "",
+                "type": "location",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "address_cn": {
+                "title": "公司地址",
+                "value": "广东省深圳市龙华新区富士康",
+                "type": "text",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "address_en": {
+                "title": "公司地址（英文）",
+                "value": "NO.0001 Xie Tu Road, Shanghai China",
+                "type": "text",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "email": {
+                "title": "公司邮箱",
+                "value": "cary@qq.com",
+                "type": "text",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "phone_cn": {
+                "title": "公司电话",
+                "value": "088 8888 8888",
+                "type": "text",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "phone_en": {
+                "title": "公司电话（英文）",
+                "value": "+8688 888 888",
+                "type": "text",
+                "tip": "",
+                "rule": {
+                    "require": true
+                }
+            },
+            "qq": {
+                "title": "联系QQ",
+                "value": "798171920, 798171921",
+                "type": "text",
+                "tip": "多个 QQ以英文逗号隔开",
+                "rule": {
+                    "require": true
+                }
+            }
+        }
+    }
+}

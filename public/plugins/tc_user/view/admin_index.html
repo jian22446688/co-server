@@ -1,0 +1,41 @@
+<include file="public@head" />
+</head>
+<body>
+    <div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>金币充值卡</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20 js-ajax-form" method="post" action="{:cmf_plugin_url('TcUser://AdminIndex/Coin_CreateCode')}">
+        生成<input type="text" class="form-control" name="Number" style="width: 50px;" value="10" placeholder="10">张<input type="text" class="form-control" name="Coin" style="width: 80px;" value="100" placeholder="100">金币充值卡
+        <button class="btn btn-primary js-ajax-submit">提交</button>
+    </form>
+        <a href="{:cmf_plugin_url('TcUser://AdminIndex/coindel')}" class="js-ajax-dialog-btn btn btn-primary btn-sm" data-msg="确定删除已使用过的充值卡吗？">删除已使用过的充值卡</a>
+        <a href="{:cmf_plugin_url('TcUser://AdminIndex/coindeln')}" class="js-ajax-dialog-btn btn btn-primary btn-sm" data-msg="确定删除未使用过的充值卡吗？">删除未使用过的充值卡</a>
+        <a href="{:cmf_plugin_url('TcUser://AdminIndex/coinept')}" class="js-ajax-dialog-btn btn btn-primary btn-sm" data-msg="确定清空所有充值卡吗？">清空所有充值卡</a>
+    <table class="table table-hover table-bordered margin-top-20">
+    <thead>
+        <tr>
+        <th width="50">ID</th>
+        <th>充值卡</th>
+        <th>面值</th>
+        <th>使用用户</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="tccoin" item="vo">
+        <tr>
+            <td>{$vo.coin_ID}</td>
+            <td>{$vo.coin_InviteCode}</td>
+            <td>{$vo.coin_Coin}</td>
+            <td>{$vo.coin_user_id==0?'':($vo.user.user_nickname?$vo.user.user_nickname:(($vo.user.user_login?$vo.user.user_login:$vo.user.mobile?$vo.user.mobile:$vo.user.user_email)))}</td>
+        </tr>
+        </foreach>
+        </tbody>
+    </table>
+        <ul class="pagination">
+        {$page}
+        </ul>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<switch name="comment_type">
+    <case value="1">
+        <div style="">
+            <br>
+            <h3>评论<span class="badge">{$total}</span></h3>
+            <div class="comment-area" id="comments" style="">
+                <form class="comment-form" action="{:cmf_plugin_url('DComment://Index/add')}" method="post" style="">
+                    <div class="form-group" style="">
+                        <div class="comment-postbox-wraper" style="">
+                            <textarea name="content" required class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn pull-right btn-primary js-ajax-submit" id="plugin-comment-comment-box-submit-btn">
+                            <i class="fa fa-comment-o"></i> 发表评论
+                        </button>
+                    </div>
+                    <input type="hidden" name="object_title" value="{$object_title}">
+                    <input type="hidden" name="table_name" value="{$table_name}">
+                    <input type="hidden" name="object_id" value="{$object_id}">
+                    <input type="hidden" name="url" value='{$url}'>
+                    <input type="hidden" name="to_user_id" value="{$user_id}">
+                    <input type="hidden" name="parent_id" value="0">
+                    <div class="clearfix"></div>
+                </form>
+                <script class="comment-reply-box-tpl" type="text/html">
+                	<div class="clearfix"></div>
+                    <div class="comment-reply-submit">
+                        <div class="comment-reply-box">
+                            <input type="text" class="textbox form-control" placeholder="回复">
+                        </div>
+                        <button class="btn pull-right" onclick="commentSubmit(this);" style="margin-top: 5px;">回复</button>
+                    </div>
+                </script>
+                <div class="comments">
+                    <volist name="comments" id="v">
+                        <hr style="margin: 5px 0;">
+                        <div id="comment{$v.id}" class="comment" data-id="{$v.id}" data-user_id="{$v.user_id}" data-username="{$v.username}">
+                            <div>
+                                <a class="pull-left" href="{:cmf_url('user/index/index',array('id'=>$v.user_id))}" style="margin-right: 10px;">
+                        	<img class="media-object avatar" src="{:cmf_url('user/public/avatar',array('id'=>$v.id))}"></a>
+                                <div>
+                                    <a href="{:cmf_url('user/index/index',array('id'=>$v.user_id))}">{$v.username}</a>:
+                                    <br>
+                                    <span class="time">{:date('m-d H:i',$v.create_time)}</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-content">
+                                    <gt name="v.parent_id" value="0">@<a href="{:cmf_url('user/index/index',array('id'=>$v.to_user_id))}">{$v.to_username}</a></gt> {$v.content} </div>
+                                <div class="pull-right">
+                                    <a onclick="commentReply(this);" href="javascript:;"><i class="fa fa-comment"></i>回复</a>
+                                    <a href="{:cmf_url('user/index/index',array('id'=>$v.user_id))}"><i class="fa fa-rmb"></i>打赏TA</a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </volist>
+                    <ul class="pagination">{$page}</ul>
+                </div>
+            </div>
+            <script>
+            Wind.use('ajaxForm', 'cookie', function() {
+
+                var $comment_form = $(".comment-area .comment-form");
+                var intervel = "{$comment_interval|default='5'}";
+                
+
+                $(".js-ajax-submit", $comment_form).on("click", function(e) {
+                    var btn = $(this),
+                        form = btn.parents(".comment-form");
+                    var d = Date.parse(new Date()) / 1000;
+
+                    if ($.cookie('com') && (d - $.cookie('com')) < intervel) {
+                        $('<span class="tips_success alert-danger">请' + intervel + '秒后再评论</span>').appendTo(btn.parent()).fadeIn('slow').delay(1000).fadeOut(function() {})
+                        return false;
+                    }
+                    e.preventDefault();
+
+                    var url = btn.data('action') ? btn.data('action') : form.attr('action');
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        type: "POST",
+                        beforeSend: function() {
+                            var text = btn.text();
+
+                            //按钮文案、状态修改
+                            btn.text(text + '中...').prop('disabled', true).addClass('disabled');
+                        },
+                        data: form.serialize(),
+                        success: function(data, textStatus, jqXHR) {
+                            var text = btn.text();
+
+                            //按钮文案、状态修改
+                            btn.removeClass('disabled').text(text.replace('中...', '')).parent().find('span').remove();
+                            btn.removeProp('disabled').removeClass('disabled');
+                            if (data.code == 1) {
+                                $('<span class="tips_success alert-danger">' + data.msg + '</span>').appendTo(btn.parent()).fadeIn('slow').delay(1000).fadeOut(function() {});
+                                $.cookie('com', Date.parse(new Date()) / 1000);
+                                form.find("[name='content']").val('');
+                            } else if (data.code == 0) {
+                                $('<span class="tips_error alert-danger">' + data.msg + '</span>').appendTo(btn.parent()).fadeIn('fast');
+                                btn.removeProp('disabled').removeClass('disabled');
+                            }
+
+                            // if (data.code == 1) {
+                            //     var $comments = form.siblings(".comments");
+                            //     var comment_tpl = btn.parents(".comment-area").find(".comment-tpl").html();
+                            //     var $comment_tpl = $(comment_tpl);
+                            //     $comment_tpl.attr("data-id", data.data.id);
+                            //     var $comment_postbox = form.find("[name='content']");
+                            //     var comment_content = $comment_postbox.val();
+                            //     $comment_tpl.find(".comment-content .content").html(comment_content);
+
+                            //     if (hljs) {
+                            //         $('pre', $comment_tpl).each(function(i, block) {
+                            //             hljs.highlightBlock(block);
+                            //         });
+                            //     }
+
+                            //     $comments.prepend($comment_tpl);
+                            // }
+
+                        },
+                        error: function(data) {
+                            $('<span class="tips_error alert-danger">' + data.msg + '</span>').appendTo(btn.parent()).fadeIn('fast');
+                            btn.removeProp('disabled').removeClass('disabled');
+                        }
+
+                    });
+
+                    return false;
+
+                });
+            });
+
+
+            function commentReply(obj) {
+
+                $(".comments .comment-reply-submit").hide();
+                var $this = $(obj);
+                var $comment_body = $this.parents(".comments > .comment> .comment-body");
+                var $comment = $this.parents(".comment");
+                var commentid = $comment.data("id");
+                var username = $comment.data("username");
+
+                var $commentReplySubmit = $comment_body.find(".comment-reply-submit");
+
+                if ($commentReplySubmit.length) {
+                    $commentReplySubmit.show();
+                } else {
+                    var comment_reply_box_tpl = $comment_body.parents(".comment-area").find(".comment-reply-box-tpl").html();
+                    $commentReplySubmit = $(comment_reply_box_tpl);
+                    $comment_body.append($commentReplySubmit);
+                }
+
+                var $replyTextbox = $commentReplySubmit.find(".textbox");
+                $replyTextbox.attr('placeholder', '@' + username);
+                $replyTextbox.focus();
+                $commentReplySubmit.data("replyid", commentid);
+            }
+
+            function commentSubmit(obj) {
+
+                Wind.use('noty', function() {
+
+                    var $this = $(obj);
+
+                    var $commentReplySubmit = $this.parents(".comment-reply-submit");
+
+                    var $replyTextbox = $commentReplySubmit.find(".textbox");
+                    var reply_content = $replyTextbox.val();
+
+                    if (reply_content == '') {
+                        $replyTextbox.focus();
+                        return;
+                    }
+
+                    var $comment_body = $this.parents(".comments > .comment> .comment-body");
+
+                    var comment_tpl = $comment_body.parents(".comment-area").find(".comment-tpl").html();
+
+                    var $comment_tpl = $(comment_tpl);
+
+                    var replyid = $commentReplySubmit.data('replyid');
+
+                    var $comment = $(".comments [data-id='" + replyid + "']");
+
+                    var username = $comment.data("username");
+
+                    var comment_content = "@" + username + ":" + reply_content;
+                    $comment_tpl.find(".comment-content .content").html(comment_content);
+                    $('.comment-area .comments').prepend($comment_tpl);
+
+                    var $comment_form = $this.parents(".comment-area").find(".comment-form");
+
+                    var comment_url = $comment_form.attr("action");
+
+                    var table_name = $comment_form.find("[name='table_name']").val();
+                    var object_title = $comment_form.find("[name='object_title']").val();
+                    var object_id = $comment_form.find("[name='object_id']").val();
+                    var object_url = $comment_form.find("[name='url']").val();
+
+                    var user_id = $comment.data("user_id");
+
+                    $.post(comment_url, {
+                        object_title: object_title,
+                        table_name: table_name,
+                        object_id: object_id,
+                        to_user_id: user_id,
+                        parent_id: replyid,
+                        content: reply_content,
+                        url: object_url
+                    }, function(data) {
+                        if (data.code == 0) {
+                            noty({
+                                text: '回复失败！',
+                                type: 'error',
+                                layout: 'center'
+                            });
+                            $comment_tpl.remove();
+                        }
+
+                        if (data.code == 1) {
+                        	noty({
+                                text: '回复成功！',
+                                type: 'success',
+                                layout: 'center'
+                            });
+                            $comment_tpl.attr("data-id", data.data.id);
+                            $replyTextbox.val('');
+                        }
+
+                    }, 'json');
+
+                    $commentReplySubmit.hide();
+                });
+
+            }
+            </script>
+        </div>
+    </case>
+    <case value="2">
+        <div style="border: 1px dashed #ddd;padding-top: 20px;">
+            <div class="alert alert-danger" role="alert">
+                评论已关闭！
+            </div>
+        </div>
+    </case>
+</switch>

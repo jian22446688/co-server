@@ -1,0 +1,17 @@
+<include file="public@head"/>
+</head>
+<body>
+<div class="container tc-main margin-top-20">
+    <form class="js-ajax-form" action="{:cmf_plugin_url('TcUser://Index/addcoin_post')}" method="post" novalidate="novalidate">
+    <div class="form-group">
+        <label for="input-user_nickname">输入金币充值卡</label>
+        <input type="text" class="form-control" id="input-user_nickname" placeholder="输入金币充值卡" name="InviteCode" value="">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary js-ajax-submit">保存</button>
+    </div>
+    </form>
+</div>
+<include file="public@scripts"/>
+</body>
+</html>

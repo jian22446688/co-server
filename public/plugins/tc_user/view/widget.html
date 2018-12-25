@@ -1,0 +1,13 @@
+<neq name="data['price']" value="0">
+<hr>
+<eq name="data['isbuy']" value="0">
+    <a class="btn btn-primary js-ajax-dialog-btn" data-msg="您确定购买此文章吗" href="{:cmf_plugin_url('TcUser://Index/buy',array('id'=>$data['id']))}">购买文章</a>
+<else>
+    隐藏内容：{$data['show']}
+</eq>
+<hr>
+</neq>
+
+<eq name="data['reward']" value="1">
+<a class="btn btn-primary" href="javascript:openIframeLayer('{:cmf_plugin_url('TcUser://Index/tip',array('id'=>2))}','打赏',{area:['500px','200px'],skin: 'tit_red'});">金币打赏</a>
+</eq>
